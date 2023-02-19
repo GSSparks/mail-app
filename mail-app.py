@@ -4,7 +4,7 @@ import sys
 import keyring
 from PyQt5.QtCore import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from PyQt5.QtWidgets import QMainWindow, QWidget, QApplication, QVBoxLayout, QMessageBox
+from PyQt5.QtWidgets import QAction, QMenu, QMainWindow, QWidget, QApplication, QVBoxLayout, QMessageBox
 from PyQt5.QtGui import QIcon
 
 class Browser(QMainWindow):
@@ -14,17 +14,23 @@ class Browser(QMainWindow):
         # Create a menubar
         menubar = self.menuBar()
 
-        # Add a "File" menu to the menubar
+        # Add menus to the menubar
         file_menu = menubar.addMenu("File")
+        view_menu = menubar.addMenu("View")
         about_menu = menubar.addMenu("Info")
-
-        # Add an "About" action to the "File" menu
-        about_action = about_menu.addAction("About")
-        about_action.triggered.connect(self.show_about_dialog)
 
         # Add an "Exit" action to the "File" menu
         exit_action = file_menu.addAction("Exit")
         exit_action.triggered.connect(self.close)
+
+        # Add a Reload action to the View menu
+        reload_action = view_menu.addAction("Reload")
+        reload_action.setShortcut("Ctrl+R")
+        reload_action.triggered.connect(self.on_reload)
+
+        # Add an "About" action to the "File" menu
+        about_action = about_menu.addAction("About")
+        about_action.triggered.connect(self.show_about_dialog)
 
         # Create two QWebEngineViews for the two tabs
         self.gmail = QWebEngineView()
@@ -48,8 +54,19 @@ class Browser(QMainWindow):
         self.setWindowTitle("Google Mail and Calendar")
         self.resize(900, 720)
 
+    def on_reload(self):
+        self.gmail.reload()
+        self.calendar.reload()
+
     def show_about_dialog(self):
-        QMessageBox.about(self, "About", "Gmail Py App\nVersion 1.0")
+        icon_path = "/usr/share/icons/google.png"
+        about_box = QMessageBox()
+        about_box.setWindowTitle("About Gmail and Calendar App")
+        about_box.setText("Gmail and Calendar App\nVersion 1.0\nWritten by Gary Sparks")
+        about_box.setIcon(QMessageBox.Information)
+        icon = QIcon(icon_path)
+        about_box.setWindowIcon(icon)
+        about_box.exec_()
 
 if __name__ == "__main__":
     # creating pyQt5 application
@@ -60,7 +77,6 @@ if __name__ == "__main__":
     app.setWindowIcon(QIcon("/usr/share/icons/google.png"))
     # creating a main window object
     browser = Browser()
-    browser.setWindowFlags(Qt.FramelessWindowHint)
     browser.show()
 
     # loop

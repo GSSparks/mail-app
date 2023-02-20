@@ -4,8 +4,21 @@ import sys
 import keyring
 from PyQt5.QtCore import *
 from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5 import QtWebEngineWidgets
 from PyQt5.QtWidgets import QAction, QMenu, QMainWindow, QWidget, QApplication, QVBoxLayout, QMessageBox
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QDesktopServices
+from PyQt5.QtCore import QUrl
+
+class WebEnginePage(QtWebEngineWidgets.QWebEnginePage):
+    def createWindow(self, _type):
+        page = WebEnginePage(self)
+        page.urlChanged.connect(self.open_browser)
+        return page
+
+    def open_browser(self, url):
+        page = self.sender()
+        QDesktopServices.openUrl(url)
+        page.deleteLater()
 
 class Browser(QMainWindow):
     def __init__(self):
@@ -32,11 +45,16 @@ class Browser(QMainWindow):
         about_action = about_menu.addAction("About")
         about_action.triggered.connect(self.show_about_dialog)
 
-        # Create two QWebEngineViews for the two tabs
+        # Create two QWebEngineViews for the two windows
         self.gmail = QWebEngineView()
-        self.calendar = QWebEngineView()
+        self.page = WebEnginePage(self.gmail)
+        self.gmail.setPage(self.page)
 
-        # Load Gmail and Calendar in the two tabs
+        self.calendar = QWebEngineView()
+        self.page = WebEnginePage(self.calendar)
+        self.calendar.setPage(self.page)
+
+        # Load Gmail and Calendar in the two windows
         self.gmail.load(QUrl("https://mail.google.com/mail/u/0/#inbox"))
         self.calendar.load(QUrl("https://calendar.google.com/calendar/u/0/r?pli=1"))
 

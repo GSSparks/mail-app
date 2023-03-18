@@ -1,6 +1,6 @@
-# MAIL-APP
+# The Unofficial Google Apps ... App
 
-This is a simple python wrapper using the PyQt5 libraries that will display your Gmail and Google calendar in the same window.
+This is a simple python wrapper using the PyQt5 libraries that will display your Gmail, Google calendar, and maps. This project came about to make using Google apps easier for me from my desktop for work. More apps may be added if I come to use them frequently in the future. 
 
 ## Benefits of using this over web browser:
 

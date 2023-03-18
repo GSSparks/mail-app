@@ -1,12 +1,12 @@
 #!/bin/python
 
 import sys
-import keyring
+import os
 from PyQt5.QtCore import *
-from PyQt5.QtWebEngineWidgets import QWebEngineView
+from PyQt5.QtWebEngineWidgets import QWebEngineView,  QWebEngineSettings
 from PyQt5 import QtWebEngineWidgets
-from PyQt5.QtWidgets import QAction, QMenu, QMainWindow, QWidget, QApplication, QVBoxLayout, QMessageBox, QSplitter
-from PyQt5.QtGui import QIcon, QDesktopServices
+from PyQt5.QtWidgets import QAction, QMenu, QMainWindow, QTabWidget, QLabel, QWidget, QApplication, QVBoxLayout, QMessageBox, QSplitter, QDockWidget
+from PyQt5.QtGui import QIcon, QDesktopServices, QPixmap
 from PyQt5.QtCore import QUrl
 
 class WebEnginePage(QtWebEngineWidgets.QWebEnginePage):
@@ -45,6 +45,12 @@ class Browser(QMainWindow):
         about_action = about_menu.addAction("About")
         about_action.triggered.connect(self.show_about_dialog)
 
+        # Create a QTabWidget to hold the QWebEngineView widgets
+        self.tab_widget = QTabWidget()
+        self.tab_widget.setTabPosition(QTabWidget.West)
+        self.tab_widget.setStyleSheet("tabWidget::tab-bar { alignment: center; }")
+        self.tab_widget.setStyleSheet("QTabBar::tab { height: 30px; width: 0px; margin: 0px; padding: 0px; border: none; }")
+        self.tab_widget.setStyleSheet("QTabBar::tab:hover {width: 120px; }")
         # Create two QWebEngineViews for the two windows
         self.gmail = QWebEngineView()
         self.page = WebEnginePage(self.gmail)
@@ -63,18 +69,23 @@ class Browser(QMainWindow):
         splitter.addWidget(self.gmail)
         splitter.addWidget(self.calendar)
 
-        # Set the QSplitter as the central widget of the main window
-        self.setCentralWidget(splitter)
+        # Add QSplitter to a new tab in the QTabWidget
+        self.tab_widget.addTab(splitter, "Home")
 
-        # Create a vertical layout and add the two QWebEngineViews to it
-        #layout = QVBoxLayout()
-        #layout.addWidget(self.gmail)
-        #layout.addWidget(self.calendar)
+        # Create a QWebEngineView widget for Maps and load the webpage
+        self.maps = QWebEngineView()
+        self.maps.load(QUrl("https://www.google.com/maps"))
 
-        # Set the layout as the central widget of the main window
-        #central_widget = QWidget()
-        #central_widget.setLayout(layout)
-        #self.setCentralWidget(central_widget)
+        # Add the Maps QWebEngineView widget to a new tab in the QTabWidget
+        self.tab_widget.addTab(self.maps, "Maps")
+
+        # Set the QTabWidget as the central widget of the main window
+        self.setCentralWidget(self.tab_widget)
+
+        # Set the icons for the tabs
+        tab_bar = self.tab_widget.tabBar()
+        tab_bar.setTabIcon(0, QIcon("./icons/home_FILL1_wght400_GRAD0_opsz48.png"))
+        tab_bar.setTabIcon(1, QIcon("./icons/map_FILL1_wght400_GRAD0_opsz48.png"))
 
         # Set the window properties
         self.setWindowTitle("Google Mail and Calendar")
@@ -87,8 +98,8 @@ class Browser(QMainWindow):
     def show_about_dialog(self):
         icon_path = "/usr/share/icons/google.png"
         about_box = QMessageBox()
-        about_box.setWindowTitle("About Gmail and Calendar App")
-        about_box.setText("Gmail and Calendar App\nVersion 1.0\nWritten by Gary Sparks")
+        about_box.setWindowTitle("About the Unofficial Google Apps ... app")
+        about_box.setText("This is a Google webapps Python and QT wrapper\nVersion 1.0\nWritten by Gary Sparks, 2023\nNot affiliated with Google.")
         about_box.setIcon(QMessageBox.Information)
         icon = QIcon(icon_path)
         about_box.setWindowIcon(icon)
@@ -101,6 +112,7 @@ if __name__ == "__main__":
     # setting name to the application
     app.setApplicationName("Mail")
     app.setWindowIcon(QIcon("/usr/share/icons/google.png"))
+
     # creating a main window object
     browser = Browser()
     browser.show()

@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=The Unofficial Google Apps ... App
+GenericName=mail-app
+Comment=A simple Google apps python wrapper
+Exec=mail-app
+Icon=../../../.icons/tugaa.svg
+Terminal=false
+Keywords=email;gmail;google;
+Categories=Network;Email;

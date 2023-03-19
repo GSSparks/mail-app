@@ -21,6 +21,9 @@ else
   # Copy the script to /usr/bin/
   sudo mv mail-app.py /usr/bin/mail-app
 
+  # Make it executable
+  sudo chmod +x /usr/bin/mail-app
+
   # Copy the icons folder to $HOME/.icons
   if [ ! -d "$HOME/.icons" ]; then
     mkdir "$HOME/.icons"

@@ -15,4 +15,12 @@ uh ... TUGA App ... and like a toga this is a simple wrapper using python and th
 ![Maps tab](/media/mail-app-screenshot2.png?raw=true "Maps tab view")
 
 ## How to Install:
-To install run `install-mail-app.sh`. This will install all of the needed files from this repo to your system. To uninstall simply run `install-mail-script.sh remove`. This will remove all of the apps files from your system. 
+To install download and run `install-mail-app.sh`. This will install all of the needed files from this repo to your system. To uninstall simply run `install-mail-script.sh remove`. 
+
+If you like to live dangerously then you can install with one command:
+
+`curl https://raw.githubusercontent.com/GSSparks/mail-app/main/install-mail-app.sh | bash`
+
+To uninstall:
+
+`curl https://raw.githubusercontent.com/GSSparks/mail-app/main/install-mail-app.sh | bash -s remove`

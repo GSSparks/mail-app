@@ -83,9 +83,11 @@ class Browser(QMainWindow):
         self.setCentralWidget(self.tab_widget)
 
         # Set the icons for the tabs
+        iconHome = os.path.expanduser("~/.icons/home_FILL1_wght400_GRAD0_opsz48.png")
+        iconMaps = os.path.expanduser("~/.icons/map_FILL1_wght400_GRAD0_opsz48.png")
         tab_bar = self.tab_widget.tabBar()
-        tab_bar.setTabIcon(0, QIcon("./icons/home_FILL1_wght400_GRAD0_opsz48.png"))
-        tab_bar.setTabIcon(1, QIcon("./icons/map_FILL1_wght400_GRAD0_opsz48.png"))
+        tab_bar.setTabIcon(0, QIcon(iconHome))
+        tab_bar.setTabIcon(1, QIcon(iconMaps))
 
         # Set the window properties
         self.setWindowTitle("Google Mail and Calendar")
@@ -96,7 +98,7 @@ class Browser(QMainWindow):
         self.calendar.reload()
 
     def show_about_dialog(self):
-        icon_path = "/usr/share/icons/google.png"
+        icon_path = os.path.expanduser("~/.icons/tugaa-48px.png")
         about_box = QMessageBox()
         about_box.setWindowTitle("About the Unofficial Google Apps ... app")
         about_box.setText("This is a Google webapps Python and QT wrapper\nVersion 1.0\nWritten by Gary Sparks, 2023\nNot affiliated with Google.")
@@ -111,7 +113,8 @@ if __name__ == "__main__":
 
     # setting name to the application
     app.setApplicationName("Mail")
-    app.setWindowIcon(QIcon("/usr/share/icons/google.png"))
+    iconApp = os.path.expanduser("~/.icons/tugaa.svg")
+    app.setWindowIcon(QIcon(iconApp))
 
     # creating a main window object
     browser = Browser()

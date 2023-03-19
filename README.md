@@ -10,3 +10,7 @@ This is a simple python wrapper using the PyQt5 libraries that will display your
 * Isolated from other browsing.
   * You can run two instances with two different Gmail accounts.
   * Links open in system's default web browser.
+
+## Screenshots:
+![Home tab](/media/mail-app-screenshot1.png?raw=true "Home tab view")
+![Maps tab](/media/mail-app-screenshot2.png?raw=true "Maps tab view")

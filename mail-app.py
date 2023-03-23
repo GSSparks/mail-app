@@ -2,14 +2,24 @@
 
 import sys
 import os
-from PyQt5.QtCore import *
-from PyQt5.QtWebEngineWidgets import QWebEngineView,  QWebEngineSettings
 from PyQt5 import QtWebEngineWidgets
-from PyQt5.QtWidgets import QAction, QMenu, QMainWindow, QTabWidget, QLabel, QWidget, QApplication, QVBoxLayout, QMessageBox, QSplitter, QDockWidget
+from PyQt5.QtWebEngineWidgets import QWebEngineView, QWebEnginePage
+from PyQt5.QtWidgets import QAction, QMenu, QMainWindow, QTabWidget, QLabel, QWidget, QApplication, QVBoxLayout, QMessageBox, QSplitter, QSystemTrayIcon, QDockWidget
 from PyQt5.QtGui import QIcon, QDesktopServices, QPixmap
-from PyQt5.QtCore import QUrl
+from PyQt5.QtCore import Qt, QUrl, QObject
 
 class WebEnginePage(QtWebEngineWidgets.QWebEnginePage):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+
+    def certificateError(self, error):
+        # Ignore SSL certificate errors
+        return True
+
+    def javaScriptConsoleMessage(self, level, message, lineNumber, sourceID):
+        # Ignore JavaScript console messages
+        pass
+
     def createWindow(self, _type):
         page = WebEnginePage(self)
         page.urlChanged.connect(self.open_browser)
@@ -48,16 +58,14 @@ class Browser(QMainWindow):
         # Create a QTabWidget to hold the QWebEngineView widgets
         self.tab_widget = QTabWidget()
         self.tab_widget.setTabPosition(QTabWidget.West)
-        self.tab_widget.setStyleSheet("tabWidget::tab-bar { alignment: center; }")
-        self.tab_widget.setStyleSheet("QTabBar::tab { height: 30px; width: 0px; margin: 0px; padding: 0px; border: none; }")
-        self.tab_widget.setStyleSheet("QTabBar::tab:hover {width: 120px; }")
-        # Create two QWebEngineViews for the two windows
-        self.gmail = QWebEngineView()
-        self.page = WebEnginePage(self.gmail)
-        self.gmail.setPage(self.page)
 
+        # Create two QWebEngineViews for the two windows
+        self.page = WebEnginePage()
+
+        self.gmail = QWebEngineView()
         self.calendar = QWebEngineView()
-        self.page = WebEnginePage(self.calendar)
+
+        self.gmail.setPage(self.page)
         self.calendar.setPage(self.page)
 
         # Load Gmail and Calendar in the two windows
@@ -74,7 +82,7 @@ class Browser(QMainWindow):
 
         # Create a QWebEngineView widget for Maps and load the webpage
         self.maps = QWebEngineView()
-        self.maps.load(QUrl("https://www.google.com/maps"))
+        self.maps.load(QUrl("https://maps.google.com"))
 
         # Add the Maps QWebEngineView widget to a new tab in the QTabWidget
         self.tab_widget.addTab(self.maps, "Maps")
@@ -90,7 +98,7 @@ class Browser(QMainWindow):
         tab_bar.setTabIcon(1, QIcon(iconMaps))
 
         # Set the window properties
-        self.setWindowTitle("Google Mail and Calendar")
+        self.setWindowTitle("The Unofficial Google Apps ... App")
         self.resize(900, 720)
 
     def on_reload(self):
